@@ -3,12 +3,15 @@ import { StatCard } from '@/components/StatCard'
 import { EMICard } from '@/components/EMICard'
 import { ItemModal, blankForm, toForm } from '@/components/ItemModal'
 import { useTracker, monthName, fmt } from '@/hooks/useTracker'
+import { useTheme } from '@/hooks/useTheme'
+import { Sun, Moon } from 'lucide-react'
 import type { EnrichedItem, ItemFormData } from '@/types'
 
 type Filter = 'All' | 'EMI' | 'Subscriptions' | 'Closed'
 
 export default function App() {
   const { enriched, loading, toast, cloudActive, payEMI, undoPay, addItem, editItem, deleteItem, flash } = useTracker()
+  const { theme, toggleTheme } = useTheme()
 
   const [filter, setFilter] = useState<Filter>('All')
   const [open,   setOpen  ] = useState(false)
@@ -78,9 +81,14 @@ export default function App() {
             <h1 style={{ margin:0, fontSize:28, fontWeight:700, fontFamily:'var(--font-heading)', color:'var(--color-foreground)', letterSpacing:'-0.5px', lineHeight:1 }}>
               EMI &amp; Subscription Tracker
             </h1>
-            <button onClick={openAdd} style={{ padding:'8px 20px', borderRadius:6, border:'none', background:'var(--color-primary)', color:'var(--color-primary-foreground)', fontSize:14, fontWeight:400, fontFamily:'var(--font-body)', cursor:'pointer' }}>
-              + Add
-            </button>
+            <div style={{ display:'flex', alignItems:'center', gap:16 }}>
+              <button onClick={toggleTheme} title="Toggle theme" style={{ padding:'8px', borderRadius:'50%', background:'var(--color-muted)', color:'var(--color-foreground)', border:'none', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+              </button>
+              <button onClick={openAdd} style={{ padding:'8px 20px', borderRadius:6, border:'none', background:'var(--color-primary)', color:'var(--color-primary-foreground)', fontSize:14, fontWeight:400, fontFamily:'var(--font-body)', cursor:'pointer' }}>
+                + Add
+              </button>
+            </div>
           </div>
         </div>
       </header>

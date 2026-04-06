@@ -30,6 +30,20 @@
   }
 }
 
+.dark {
+  --color-background: hsl(220 20% 8%);
+  --color-foreground: hsl(40 20% 95%);
+  --color-card: hsl(220 18% 12%);
+  --color-primary: hsl(24 80% 55%);
+  --color-primary-foreground: hsl(0 0% 100%);
+  --color-muted: hsl(220 12% 20%);
+  --color-muted-foreground: hsl(220 10% 60%);
+  --color-border: hsl(220 12% 22%);
+  --color-destructive: hsl(0 62.8% 30.6%);
+  --color-success: hsl(145 50% 35%);
+  --color-warning: hsl(38 80% 45%);
+}
+
 *, *::before, *::after { box-sizing: border-box; }
 html, body, #root { height: 100%; }
 body {
