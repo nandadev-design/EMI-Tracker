@@ -176,15 +176,32 @@ export function useTracker() {
   const addItem = useCallback((f:ItemFormData)=>{
     const dd=Math.min(31,Math.max(1,parseInt(f.dueDay,10)||1))
     const bb=f.type==='EMI'?(Number(f.baseBalance)||0):null
-    setItems(p=>[...p,{id:nextId(p),name:f.name.trim(),type:f.type,amount:Number(f.amount),baseBalance:bb,dueDay:dd,rate:f.rate.trim(),endDate:f.endDate.trim()||null,notes:f.notes.trim(),status:f.status}])
+    const id=nextId(items)
+    setItems(p=>[...p,{id,name:f.name.trim(),type:f.type,amount:Number(f.amount),baseBalance:bb,dueDay:dd,rate:f.rate.trim(),endDate:f.endDate.trim()||null,notes:f.notes.trim(),status:f.status}])
+    
+    if (f.type === 'EMI') {
+      const cbStr = f.currentBalance.trim()
+      const cb = cbStr ? Number(cbStr) : bb
+      if (cb != null && !isNaN(cb)) setBals(p=>({...p, [id]: cb}))
+    }
+    
     flash(`Added "${f.name.trim()}"`)
-  },[flash])
+  },[items,flash])
 
   const editItem = useCallback((id:number,f:ItemFormData)=>{
     const dd=Math.min(31,Math.max(1,parseInt(f.dueDay,10)||1))
     const bb=f.type==='EMI'?(Number(f.baseBalance)||0):null
     setItems(p=>p.map(i=>i.id===id?{...i,name:f.name.trim(),type:f.type,amount:Number(f.amount),baseBalance:bb,dueDay:dd,rate:f.rate.trim(),endDate:f.endDate.trim()||null,notes:f.notes.trim(),status:f.status}:i))
-    if(f.type!=='EMI'){const {nb,nh,nd}=drop(bals,hists,dates,id);setBals(nb);setHists(nh);setDates(nd)}
+    
+    if(f.type!=='EMI'){
+      const {nb,nh,nd}=drop(bals,hists,dates,id);setBals(nb);setHists(nh);setDates(nd)
+    } else {
+      const cbStr = f.currentBalance.trim()
+      if (cbStr) {
+        const cb = Number(cbStr)
+        if (!isNaN(cb)) setBals(p=>({...p, [id]: cb}))
+      }
+    }
     flash(`Updated "${f.name.trim()}"`)
   },[bals,hists,dates,flash])
 

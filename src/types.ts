@@ -25,6 +25,7 @@ export interface ItemFormData {
   type:        EntryType
   amount:      string
   baseBalance: string
+  currentBalance: string
   dueDay:      string
   rate:        string
   endDate:     string

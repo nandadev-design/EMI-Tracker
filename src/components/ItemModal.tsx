@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/Dialog'
-import type { TrackerItem, ItemFormData } from '@/types'
+import type { ItemFormData, EnrichedItem } from '@/types'
 
-export const blankForm = (): ItemFormData => ({ name:'', type:'EMI', amount:'', baseBalance:'', dueDay:'1', rate:'', endDate:'', notes:'', status:'Active' })
+export const blankForm = (): ItemFormData => ({ name:'', type:'EMI', amount:'', baseBalance:'', currentBalance:'', dueDay:'1', rate:'', endDate:'', notes:'', status:'Active' })
 
-export const toForm = (it: TrackerItem): ItemFormData => ({
+export const toForm = (it: EnrichedItem): ItemFormData => ({
   name: it.name, type: it.type, amount: String(it.amount),
   baseBalance: it.baseBalance!=null ? String(it.baseBalance) : '',
+  currentBalance: it.bal!=null ? String(it.bal) : '',
   dueDay: String(it.dueDay), rate: it.rate||'', endDate: it.endDate||'', notes: it.notes||'', status: it.status,
 })
 
@@ -55,7 +56,12 @@ export function ItemModal({ open, isNew, initialForm, onClose, onSave }: Props) 
             <label style={lbl}>Due Day (1–31)<input style={inp} type='number' min={1} max={31} placeholder='1' value={f.dueDay} onChange={e=>set({dueDay:e.target.value})} /></label>
           </div>
 
-          {f.type==='EMI' && <label style={lbl}>Outstanding Balance (₹)<input style={inp} type='number' min={0} placeholder='0' value={f.baseBalance} onChange={e=>set({baseBalance:e.target.value})} /></label>}
+          {f.type==='EMI' && (
+            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
+              <label style={lbl}>Original Loan (₹)<input style={inp} type='number' min={0} placeholder='0' value={f.baseBalance} onChange={e=>set({baseBalance:e.target.value})} /></label>
+              <label style={lbl}>Current Balance (₹)<input style={inp} type='number' min={0} placeholder='0' value={f.currentBalance} onChange={e=>set({currentBalance:e.target.value})} /></label>
+            </div>
+          )}
 
           <label style={lbl}>Interest Rate (optional)<input style={inp} placeholder='e.g. 12%' value={f.rate} onChange={e=>set({rate:e.target.value})} /></label>
           <label style={lbl}>End Date (optional)<input style={inp} placeholder='e.g. Dec 2026' value={f.endDate} onChange={e=>set({endDate:e.target.value})} /></label>

@@ -31,7 +31,10 @@ export default function App() {
   const save = (f:ItemFormData) => {
     if (!f.name.trim())                                                 { flash('Please enter a name','err'); return }
     if (!Number.isFinite(Number(f.amount)) || Number(f.amount)<0)       { flash('Enter a valid amount','err'); return }
-    if (f.type==='EMI' && (!Number.isFinite(Number(f.baseBalance))||Number(f.baseBalance)<0)) { flash('Enter outstanding balance','err'); return }
+    if (f.type==='EMI') {
+      if (!Number.isFinite(Number(f.baseBalance))||Number(f.baseBalance)<0) { flash('Enter original loan amount','err'); return }
+      if (f.currentBalance.trim() && (!Number.isFinite(Number(f.currentBalance))||Number(f.currentBalance)<0)) { flash('Enter valid current balance','err'); return }
+    }
     isNew ? addItem(f) : editItem(editing!.id, f)
     setOpen(false)
   }
