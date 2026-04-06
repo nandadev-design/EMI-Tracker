@@ -156,5 +156,4 @@ export function EMICard({ item, index, onPay, onUndo, onEdit, onDelete }: Props)
   )
 }
 
-// needed for JSX
-import React from 'react'
+

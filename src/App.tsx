@@ -8,7 +8,7 @@ import type { EnrichedItem, ItemFormData } from '@/types'
 type Filter = 'All' | 'EMI' | 'Subscriptions' | 'Closed'
 
 export default function App() {
-  const { enriched, loading, toast, cloudActive, syncLine, payEMI, undoPay, addItem, editItem, deleteItem, flash } = useTracker()
+  const { enriched, loading, toast, cloudActive, payEMI, undoPay, addItem, editItem, deleteItem, flash } = useTracker()
 
   const [filter, setFilter] = useState<Filter>('All')
   const [open,   setOpen  ] = useState(false)

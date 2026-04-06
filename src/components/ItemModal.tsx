@@ -71,5 +71,4 @@ export function ItemModal({ open, isNew, initialForm, onClose, onSave }: Props) 
   )
 }
 
-// needed for JSX
-import React from 'react'
+
