@@ -31,7 +31,7 @@ function today0() { const d = new Date(); d.setHours(0,0,0,0); return d }
 export const todayStr  = () => { const d = today0(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}` }
 export const todayDay  = () => today0().getDate()
 export const monthName = () => today0().toLocaleDateString('en-IN', { month:'long', year:'numeric' })
-const todayYear = () => today0().getFullYear()
+
 
 export function getDueDates(dd: number) {
   const T = today0(), y = T.getFullYear(), m = T.getMonth()
@@ -39,16 +39,16 @@ export function getDueDates(dd: number) {
   return { lastDue: T >= cur ? cur : prv, nextDue: T >= cur ? nxt : cur }
 }
 const diff = (a: Date, b: Date) => Math.round((b.getTime()-a.getTime())/86400000)
-const fmtDate = (d: Date) => d.toLocaleDateString('en-IN', { day:'numeric', month:'short', year: d.getFullYear()!==todayYear()?'numeric':undefined })
+const ddmmyyyy = (d: Date) => `${String(d.getDate()).padStart(2,'0')}-${String(d.getMonth()+1).padStart(2,'0')}-${d.getFullYear()}`
 
 export function payStatus(dueDay: number, lastPaid: string|null) {
   const T = today0(), { lastDue, nextDue } = getDueDates(dueDay), dtn = diff(T, nextDue)
   const paid = lastPaid && new Date(lastPaid) >= lastDue
-  if (paid) { const ago = diff(new Date(lastPaid!), T); return { label: ago===0?'Paid today':`Paid ${ago}d ago`, sub:`Next due ${fmtDate(nextDue)} · in ${dtn}d`, color:'#15803d', bg:'#f0fdf4', border:'#bbf7d0', dot:'#22c55e', kind:'paid' as const } }
+  if (paid) { return { label: `Paid on ${ddmmyyyy(new Date(lastPaid!))}`, sub:`Next Due on ${ddmmyyyy(nextDue)}`, kind:'paid' as const } }
   const od = diff(lastDue, T)
-  if (od > 0) return { label:`Overdue by ${od}d`,  sub:`Was due ${fmtDate(lastDue)}`,        color:'#dc2626', bg:'#fef2f2', border:'#fecaca', dot:'#ef4444', kind:'overdue'  as const }
-  if (dtn <= 3) return { label:`Due in ${dtn}d`,   sub:`Due ${fmtDate(nextDue)}`,             color:'#b45309', bg:'#fffbeb', border:'#fde68a', dot:'#f59e0b', kind:'soon'    as const }
-  return { label:`Due ${fmtDate(nextDue)}`,         sub:`In ${dtn} days`,                     color:'#6b7280', bg:'#f9fafb', border:'#e5e7eb', dot:'#d1d5db', kind:'upcoming' as const }
+  if (od > 0) return { label:`Overdue by ${od}d`,  sub:`Was due on ${ddmmyyyy(lastDue)}`, kind:'overdue' as const }
+  if (dtn <= 3) return { label:`Due in ${dtn}d`,   sub:`Due ${ddmmyyyy(nextDue)}`, kind:'soon' as const }
+  return { label:`Due ${ddmmyyyy(nextDue)}`,       sub:`In ${dtn} days`, kind:'upcoming' as const }
 }
 
 export const fmt = (n: number) => `₹${Number(n).toLocaleString('en-IN')}`

@@ -1,19 +1,19 @@
-import { Progress } from '@/components/ui/Progress'
+
 import { payStatus, fmt, ord } from '@/hooks/useTracker'
 import type { EnrichedItem } from '@/types'
 
 function Avatar({ name }: { name: string }) {
   const init = name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()
   return (
-    <div style={{ width:36, height:36, borderRadius:'50%', background:'var(--color-muted)', color:'var(--color-foreground)', fontFamily:'var(--font-body)', fontSize:12, fontWeight:600, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+    <div className="w-11 h-11 rounded-full bg-muted dark:bg-status-box flex items-center justify-center flex-shrink-0 text-foreground font-body text-xs font-semibold">
       {init}
     </div>
   )
 }
 
-const CalIcon = () => <svg width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} style={{flexShrink:0}}><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-const ClkIcon = () => <svg width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} style={{flexShrink:0}}><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-const UndoIcon = () => <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round"><path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+const CalIcon = () => <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="opacity-40 shrink-0"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+const ClkIcon = () => <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="opacity-40 shrink-0"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+const UndoIcon = () => <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" className="opacity-40"><path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
 
 interface Props {
   item: EnrichedItem
@@ -35,118 +35,153 @@ export function EMICard({ item, index, onPay, onUndo, onEdit, onDelete }: Props)
   const ratio   = isEMI && base > 0 ? Math.min(1, (base-bal)/base) : 0
   const moLeft  = isEMI && bal>0 && item.amount>0 ? Math.ceil(bal/item.amount) : 0
   const pct     = Math.round(ratio*100)
-  const note    = moLeft > 0 ? `~${moLeft} mo` : ''
+  
+  const totalBars = 35
 
   return (
-    <div
-      style={{
-        background: 'var(--color-card)',
-        border: '1px solid var(--color-border)',
-        borderRadius: 12,
-        overflow: 'hidden',
-        display: 'flex',
-        flexDirection: 'column',
-        opacity: closed ? 0.72 : 1,
-        transition: 'all 0.2s',
-        animation: `fade-up 0.34s ease ${index*0.04}s both`,
-      }}
-      onMouseEnter={e=>{e.currentTarget.style.boxShadow='0 4px 20px rgba(0,0,0,0.04)';e.currentTarget.style.transform='translateY(-1px)'}}
-      onMouseLeave={e=>{e.currentTarget.style.boxShadow='none';e.currentTarget.style.transform='none'}}
+    <div 
+      className={`rounded-xl bg-card border border-border p-5 sm:p-6 transition-all hover:shadow-lg hover:-translate-y-[2px] duration-200 flex flex-col ${closed ? 'opacity-70' : 'opacity-100'}`}
+      style={{ animation: `fade-up 0.34s ease ${index*0.04}s both` }}
     >
-      {/* header */}
-      <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', padding:'20px 20px 16px', gap:12 }}>
-        <div style={{ display:'flex', alignItems:'center', gap:14, minWidth:0 }}>
+      {/* Header */}
+      <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center gap-3">
           <Avatar name={item.name} />
-          <div style={{ minWidth:0, display:'flex', flexDirection:'column', gap:2 }}>
-            <h3 style={{ margin:0, fontSize:15, fontWeight:400, fontFamily:'var(--font-body)', color:'var(--color-foreground)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{item.name}</h3>
-            <div style={{ display:'flex', gap:8, alignItems:'center', flexWrap:'wrap' }}>
-              <span style={{ fontSize:10, fontWeight:600, textTransform:'uppercase', letterSpacing:'0.06em', fontFamily:'var(--font-body)', color: isEMI?'var(--color-primary)':closed?'var(--color-muted-foreground)':'#8b5cf6' }}>{item.type}</span>
-              {closed && <span style={{ fontSize:10, fontWeight:600, fontFamily:'var(--font-body)', color:'var(--color-muted-foreground)' }}>Closed</span>}
-              {item.rate && <span style={{ fontSize:10, fontWeight:600, fontFamily:'var(--font-body)', color:'var(--color-warning)' }}>{item.rate.includes('%')?item.rate:`${item.rate}%`} p.a.</span>}
+          <div>
+            <h3 className="text-[15px] font-body font-semibold text-foreground leading-tight">{item.name}</h3>
+            <div className="flex flex-wrap items-center gap-2 mt-1">
+              <span className={`text-[11px] font-body font-semibold uppercase tracking-wide ${isEMI ? 'text-primary' : closed ? 'text-muted-foreground' : 'text-[#8b5cf6]'}`}>
+                {item.type}
+              </span>
+              {closed && <span className="text-[10px] font-bold font-body text-muted-foreground">CLOSED</span>}
+              {item.rate && <span className="text-[10px] font-bold font-body text-warning">{item.rate.includes('%') ? item.rate : `${item.rate}%`} p.a.</span>}
             </div>
           </div>
         </div>
-        <div style={{ display:'flex', gap:6, flexShrink:0 }}>
-          <button onClick={()=>onEdit(item)} style={{ fontSize:10, padding:'4px 10px', borderRadius:4, border:'1px solid var(--color-border)', background:'transparent', color:'var(--color-muted-foreground)', fontFamily:'var(--font-body)', cursor:'pointer' }}>Edit</button>
-          <button onClick={()=>{if(confirm(`Remove "${item.name}"?`)) onDelete(item)}} style={{ padding:'4px 8px', borderRadius:4, border:'1px solid hsl(0 65% 52% / 0.15)', background:'transparent', color:'var(--color-destructive)', fontFamily:'var(--font-body)', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}><span style={{fontSize:10,lineHeight:1}}>×</span></button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => onEdit(item)}
+            className="text-[11px] px-3 py-1.5 rounded-[5px] border border-border flex items-center justify-center hover:bg-muted font-body text-muted-foreground transition-colors cursor-pointer"
+          >
+            Edit
+          </button>
+          <button
+            onClick={() => { if (confirm(`Remove "${item.name}"?`)) onDelete(item) }}
+            className="w-[28px] rounded-[5px] border border-destructive/30 flex items-center justify-center hover:bg-destructive/10 text-destructive font-body cursor-pointer transition-colors"
+          >
+            <span className="text-[14px]">×</span>
+          </button>
         </div>
       </div>
 
-      {/* EMI */}
+      {/* EMI view */}
       {isEMI && (
-        <div style={{ padding:'0 20px 20px', flex:1, display:'flex', flexDirection:'column' }}>
-          <p style={{ margin:0, fontSize:10, textTransform:'uppercase', letterSpacing:'0.08em', color:'var(--color-muted-foreground)', fontFamily:'var(--font-body)', fontWeight:600 }}>Balance remaining</p>
-          <div style={{ display:'flex', alignItems:'baseline', justifyContent:'space-between', marginTop:6 }}>
-            <span style={{ fontSize:22, fontFamily:'var(--font-mono)', fontWeight:400, color: bal<item.amount?'var(--color-success)':'var(--color-foreground)' }}>{fmt(bal)}</span>
-            {note && <span style={{ fontSize:11, color:'var(--color-muted-foreground)', fontFamily:'var(--font-body)' }}>{note}</span>}
+        <div className="flex-1 flex flex-col">
+          <div className="mb-4">
+            <p className="text-xs font-body font-semibold uppercase tracking-widest text-muted-foreground mb-1">Balance Remaining</p>
+            <div className="flex items-baseline justify-between mt-2">
+              <p className={`font-mono text-[32px] font-semibold leading-none tracking-tight ${bal < item.amount ? 'text-success' : 'text-foreground'}`}>
+                {fmt(bal)}
+              </p>
+              {moLeft > 0 && (
+                <span className="text-[13px] text-muted-foreground font-body font-medium bg-muted/50 px-2.5 py-1 rounded-md">~{moLeft} mo left</span>
+              )}
+            </div>
           </div>
-          <p style={{ margin:'4px 0 0', fontSize:12, color:'var(--color-muted-foreground)', fontFamily:'var(--font-body)' }}>Monthly <span style={{ color:'var(--color-foreground)' }}>{fmt(item.amount)}</span></p>
 
+          <p className="text-sm text-muted-foreground font-body mb-5">
+            Monthly <span className="font-mono font-semibold text-foreground">{fmt(item.amount)}</span>
+          </p>
+
+          {/* Completion progress bar */}
           {base > 0 && (
-            <div style={{ marginTop:16 }}>
-              <Progress value={pct} className='h-[3px]' />
-              <p style={{ margin:'6px 0 0', fontSize:10, color:'var(--color-muted-foreground)', fontFamily:'var(--font-body)' }}>{pct}% paid of {fmt(base)}</p>
+            <div className="mb-5">
+              <div className="w-full flex gap-[3px]">
+                {Array.from({ length: totalBars }).map((_, i) => (
+                  <div
+                    key={i}
+                    className={`flex-1 h-[20px] rounded-[3px] ${i < Math.round((pct / 100) * totalBars) ? 'bg-primary' : 'bg-progress-track'}`}
+                  />
+                ))}
+              </div>
+              <p className="text-[11px] text-muted-foreground font-body mt-2">
+                {pct}% paid of {fmt(base)}
+              </p>
             </div>
           )}
 
-          <div style={{ display:'flex', flexWrap:'wrap', gap:12, marginTop:16, color:'var(--color-muted-foreground)' }}>
-            <span style={{ display:'flex', alignItems:'center', gap:6, fontSize:11, fontFamily:'var(--font-body)' }}><CalIcon /> Due {ord(item.dueDay)}</span>
-            {item.endDate && <span style={{ display:'flex', alignItems:'center', gap:6, fontSize:11, fontFamily:'var(--font-body)' }}><ClkIcon /> Ends {item.endDate}</span>}
+          <div className="flex items-center flex-wrap gap-3 text-sm text-muted-foreground font-body mb-5">
+            <span className="flex items-center gap-1.5"><CalIcon /> Due {ord(item.dueDay)}</span>
+            {item.endDate && <span className="flex items-center gap-1.5"><ClkIcon /> Ends {item.endDate}</span>}
           </div>
 
+          {/* Payment status */}
           {ps && !paidOff && (
-            <div style={{ display:'flex', alignItems:'flex-start', gap:8, marginTop:16, padding:'12px', borderRadius:6, background:ps.bg }}>
-              <div style={{ width:6, height:6, borderRadius:'50%', background:ps.dot, marginTop:4, flexShrink:0 }} />
+            <div className={`flex items-start gap-3 px-4 py-3 rounded-[5px] ${ps.kind === 'overdue' ? 'bg-overdue-box text-destructive' : ps.kind === 'paid' ? 'bg-paid-box text-success' : 'bg-status-box text-warning'}`}>
+              <span className={`w-2 h-2 rounded-full flex-shrink-0 mt-1.5 ${ps.kind === 'overdue' ? 'bg-destructive' : ps.kind === 'paid' ? 'bg-success' : 'bg-warning'}`} />
               <div>
-                <p style={{ margin:0, fontSize:12, fontWeight:400, fontFamily:'var(--font-body)', color:ps.color }}>{ps.label}</p>
-                <p style={{ margin:'2px 0 0', fontSize:10, color:'var(--color-muted-foreground)', fontFamily:'var(--font-body)' }}>{ps.sub}</p>
+                <p className="text-sm font-body font-medium m-0">{ps.label}</p>
+                <p className="text-xs text-muted-foreground font-body mt-0.5 mb-0">{ps.sub}</p>
               </div>
             </div>
           )}
+
           {paidOff && (
-            <div style={{ display:'flex', alignItems:'center', gap:8, marginTop:16, padding:'12px', borderRadius:6, background:'hsl(145 60% 40% / 0.06)' }}>
-              <div style={{ width:6, height:6, borderRadius:'50%', background:'var(--color-success)', flexShrink:0 }} />
-              <p style={{ margin:0, fontSize:12, fontWeight:400, fontFamily:'var(--font-body)', color:'var(--color-success)' }}>Fully paid off</p>
+            <div className="flex items-center gap-3 px-4 py-3 rounded-[5px] bg-paid-box text-success">
+              <span className="w-2 h-2 rounded-full bg-success flex-shrink-0" />
+              <p className="text-sm font-body font-medium m-0">Fully paid off</p>
             </div>
           )}
 
-          <div style={{ flex:1 }} />
+          {/* Spacer to push button box to bottom */}
+          <div className="flex-1" />
 
+          {/* Pay button + undo in separate box */}
           {!closed && (
-            <div style={{ display:'flex', gap:8, marginTop:20 }}>
-              <button
-                onClick={()=>onPay(item)} disabled={paidOff}
-                style={{ flex:1, padding:'10px 0', borderRadius:6, border:'none', fontFamily:'var(--font-body)', fontSize:13, fontWeight:400, cursor:paidOff?'not-allowed':'pointer', background:paidOff?'var(--color-muted)':'var(--color-primary)', color:paidOff?'var(--color-muted-foreground)':'var(--color-primary-foreground)', transition:'opacity 0.15s' }}
-              >{paidOff?'Paid off':`Pay ${fmt(item.amount)}`}</button>
-              {canUndo && (
-                <button
-                  onClick={()=>onUndo(item)} title={`Restore to ${fmt(item.hist[item.hist.length-1])}`}
-                  style={{ width:40, borderRadius:6, border:'1px solid var(--color-border)', background:'var(--color-card)', color:'var(--color-muted-foreground)', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}
-                ><UndoIcon /></button>
-              )}
+            <div className="bg-button-box rounded-b-[11px] border-t border-border/50 px-5 py-5 -mx-5 sm:-mx-6 -mb-5 sm:-mb-6 mt-6">
+              <div className="flex items-center gap-3">
+                <button 
+                  onClick={() => onPay(item)} disabled={paidOff}
+                  className={`flex-1 py-[14px] rounded-[5px] text-[13px] font-body font-semibold cursor-pointer transition-colors ${paidOff ? 'bg-muted text-muted-foreground cursor-not-allowed' : 'bg-primary hover:bg-primary/90 text-primary-foreground'}`}
+                >
+                  {paidOff ? 'Paid off' : `Pay ${fmt(item.amount)}`}
+                </button>
+                {canUndo && (
+                  <button 
+                    onClick={() => onUndo(item)} title={`Restore to ${fmt(item.hist[item.hist.length-1])}`}
+                    className="w-[46px] h-[46px] rounded-[5px] bg-card border border-border flex items-center justify-center hover:bg-muted dark:bg-undo-button dark:border-transparent dark:hover:bg-undo-button/80 transition-colors flex-shrink-0 cursor-pointer text-foreground"
+                  >
+                    <UndoIcon />
+                  </button>
+                )}
+              </div>
             </div>
           )}
         </div>
       )}
 
-      {/* Subscription */}
+      {/* Subscription view */}
       {!isEMI && (
-        <div style={{ padding:'0 20px 20px', flex:1, display:'flex', flexDirection:'column' }}>
-          <p style={{ margin:0, fontSize:10, textTransform:'uppercase', letterSpacing:'0.08em', color:'var(--color-muted-foreground)', fontFamily:'var(--font-body)', fontWeight:600 }}>Monthly amount</p>
-          <div style={{ display:'flex', alignItems:'baseline', justifyContent:'space-between', marginTop:6 }}>
-            <span style={{ fontSize:22, fontFamily:'var(--font-mono)', fontWeight:400, color:'var(--color-foreground)' }}>{fmt(item.amount)}</span>
-            <span style={{ fontSize:11, color:'var(--color-muted-foreground)', fontFamily:'var(--font-body)' }}>/ month</span>
+        <div className="flex-1 flex flex-col">
+          <p className="text-xs font-body font-semibold uppercase tracking-widest text-muted-foreground mb-1">Monthly amount</p>
+          <div className="flex items-baseline justify-between mt-2 mb-6">
+            <p className="font-mono text-[32px] font-semibold text-foreground leading-none tracking-tight">
+              {fmt(item.amount)}
+            </p>
+            <span className="text-[13px] text-muted-foreground font-body font-medium bg-muted/50 px-2.5 py-1 rounded-md">/ month</span>
           </div>
-          <div style={{ display:'flex', flexWrap:'wrap', gap:12, marginTop:16, color:'var(--color-muted-foreground)' }}>
-            <span style={{ display:'flex', alignItems:'center', gap:6, fontSize:11, fontFamily:'var(--font-body)' }}><CalIcon /> Renews {ord(item.dueDay)}</span>
-            {item.endDate && <span style={{ display:'flex', alignItems:'center', gap:6, fontSize:11, fontFamily:'var(--font-body)' }}><ClkIcon /> Ends {item.endDate}</span>}
+
+          <div className="flex items-center flex-wrap gap-3 text-sm text-muted-foreground font-body mb-5">
+            <span className="flex items-center gap-1.5"><CalIcon /> Renews {ord(item.dueDay)}</span>
+            {item.endDate && <span className="flex items-center gap-1.5"><ClkIcon /> Ends {item.endDate}</span>}
           </div>
+
           {ps && !closed && (
-            <div style={{ display:'flex', alignItems:'flex-start', gap:8, marginTop:16, padding:'12px', borderRadius:6, background:ps.bg }}>
-              <div style={{ width:6, height:6, borderRadius:'50%', background:ps.dot, marginTop:4, flexShrink:0 }} />
+            <div className={`flex items-start gap-3 px-4 py-3 rounded-[5px] ${ps.kind === 'overdue' ? 'bg-overdue-box text-destructive' : ps.kind === 'paid' ? 'bg-paid-box text-success' : 'bg-status-box text-warning'}`}>
+              <span className={`w-2 h-2 rounded-full flex-shrink-0 mt-1.5 ${ps.kind === 'overdue' ? 'bg-destructive' : ps.kind === 'paid' ? 'bg-success' : 'bg-warning'}`} />
               <div>
-                <p style={{ margin:0, fontSize:12, fontWeight:400, fontFamily:'var(--font-body)', color:ps.color }}>{ps.label}</p>
-                <p style={{ margin:'2px 0 0', fontSize:10, color:'var(--color-muted-foreground)', fontFamily:'var(--font-body)' }}>{ps.sub}</p>
+                <p className="text-sm font-body font-medium m-0">{ps.label}</p>
+                <p className="text-xs text-muted-foreground font-body mt-0.5 mb-0">{ps.sub}</p>
               </div>
             </div>
           )}
@@ -155,5 +190,3 @@ export function EMICard({ item, index, onPay, onUndo, onEdit, onDelete }: Props)
     </div>
   )
 }
-
-

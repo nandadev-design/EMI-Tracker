@@ -85,10 +85,10 @@ export default function App() {
               EMI &amp; Subscription Tracker
             </h1>
             <div style={{ display:'flex', alignItems:'center', gap:16 }}>
-              <button onClick={toggleTheme} title="Toggle theme" style={{ padding:'8px', borderRadius:'50%', background:'var(--color-muted)', color:'var(--color-foreground)', border:'none', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}>
+              <button onClick={toggleTheme} title="Toggle theme" style={{ padding:'8px', borderRadius:'5px', background:'var(--color-muted)', color:'var(--color-foreground)', border:'none', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}>
                 {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
               </button>
-              <button onClick={openAdd} style={{ padding:'8px 20px', borderRadius:6, border:'none', background:'var(--color-primary)', color:'var(--color-primary-foreground)', fontSize:14, fontWeight:400, fontFamily:'var(--font-body)', cursor:'pointer' }}>
+              <button onClick={openAdd} style={{ padding:'8px 20px', borderRadius:'5px', border:'none', background:'var(--color-primary)', color:'var(--color-primary-foreground)', fontSize:14, fontWeight:400, fontFamily:'var(--font-body)', cursor:'pointer' }}>
                 + Add
               </button>
             </div>

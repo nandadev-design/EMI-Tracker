@@ -1,17 +1,30 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: hsl(210 20% 98%);
-  --color-foreground: hsl(220 20% 14%);
+  --color-background: hsl(0 0% 93%);
+  --color-button-box: hsl(0 0% 95%);
+  --color-foreground: hsl(220 16% 12%);
+
   --color-card: hsl(0 0% 100%);
-  --color-primary: hsl(24 76% 58%);
+  --color-card-foreground: hsl(220 16% 12%);
+
+  --color-primary: hsl(24 81% 55%);
   --color-primary-foreground: hsl(0 0% 100%);
-  --color-muted: hsl(210 16% 96%);
-  --color-muted-foreground: hsl(215 16% 47%);
-  --color-border: hsl(214 15% 91%);
-  --color-destructive: hsl(0 65% 52%);
-  --color-success: hsl(145 60% 40%);
-  --color-warning: hsl(38 90% 55%);
+
+  --color-muted: hsl(220 4% 90%);
+  --color-muted-foreground: hsl(220 4% 55%);
+
+  --color-destructive: hsl(5 100% 60%);
+  --color-success: hsl(142 100% 39%);
+  --color-warning: hsl(24 80% 55%);
+
+  --color-border: hsl(220 4% 74%);
+
+  --color-status-box: hsl(220 4% 94%);
+  --color-progress-track: hsl(220 4% 85%);
+
+  --color-overdue-box: hsl(4 100% 98%);
+  --color-paid-box: hsl(146 47% 97%);
 
   --font-heading: 'Merriweather', Georgia, serif;
   --font-body: 'Lato', -apple-system, sans-serif;
@@ -31,17 +44,31 @@
 }
 
 .dark {
-  --color-background: hsl(220 20% 8%);
-  --color-foreground: hsl(40 20% 95%);
-  --color-card: hsl(220 18% 12%);
-  --color-primary: hsl(24 80% 55%);
+  --color-background: hsl(220 100% 2%);
+  --color-foreground: hsl(0 0% 100%);
+  --color-button-box: hsl(217 52% 11%);
+
+  --color-card: hsl(214 94% 7%);
+  --color-card-foreground: hsl(0 0% 100%);
+
+  --color-primary: hsl(24 81% 55%);
   --color-primary-foreground: hsl(0 0% 100%);
-  --color-muted: hsl(220 12% 20%);
-  --color-muted-foreground: hsl(220 10% 60%);
-  --color-border: hsl(220 12% 22%);
-  --color-destructive: hsl(0 62.8% 30.6%);
-  --color-success: hsl(145 50% 35%);
-  --color-warning: hsl(38 80% 45%);
+
+  --color-muted: hsl(216 6% 25%);
+  --color-muted-foreground: hsl(220 4% 38%);
+
+  --color-destructive: hsl(5 100% 60%);
+  --color-success: hsl(142 100% 39%);
+  --color-warning: hsl(24 80% 55%);
+
+  --color-border: hsl(220 4% 38%);
+
+  --color-status-box: hsl(219 55% 16%);
+  --color-progress-track: hsl(216 46% 19%);
+  --color-undo-button: hsl(216 43% 21%);
+
+  --color-overdue-box: hsl(249 31% 15%);
+  --color-paid-box: hsl(193 96% 10%);
 }
 
 *, *::before, *::after { box-sizing: border-box; }
